@@ -2,7 +2,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-engine = create_engine('mysql+pymysql://root:123@localhost:3306/madedish_quantiza?charset=utf8')
+engine = create_engine('mysql+pymysql://root:123456@localhost:3306/madedish_quantiza?charset=utf8')
 db_session = scoped_session(sessionmaker(autoflush=False,bind=engine))
 
 # import pymysql.cursors

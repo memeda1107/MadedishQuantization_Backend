@@ -30,10 +30,29 @@ class ReviewDiary(Base):
 
     def to_dict(self):
         return {
-            "id": self.id,
-            "title": self.income,
-            "start": self.record_date.isoformat()if self.record_date else None,
-            "description": self.market_trend
+            "id": str(self.id),
+            "title": "盈利"+str(self.income),
+            # "title": "盈利" + self.income,
+            "start": self.record_date.isoformat() if self.record_date else None,
+            "end": self.record_date.isoformat() if self.record_date else None,
+            # "description": self.market_trend
+            "income":self.income,
+            "marketTrend": self.market_trend,
+            "marketIncrease": self.market_increase,
+            "turnover": self.turnover,
+            "numberOfRising": self.number_of_rising,
+            "numberOfFalling": self.number_of_falling,
+            "numberOfLimitUp": self.number_of_limit_up,
+            "numberOfLimitDown": self.number_of_limit_down,
+            "explosionRate": self.explosion_rate,
+            "yesterdayLimitUp": self.yesterday_limit_up,
+            "yesterdayConnectingPlate": self.yesterday_connecting_plate,
+            "shortTermFunds": self.short_term_funds,
+            "overallMarketReview": self.overall_market_review,
+            "anyDifferencesSectors": self.any_differences_sectors,
+            "expectedLeaders": self.expected_leaders,
+            "todayBestSolution": self.today_best_solution,
+            "mistakesMadeToday": self.mistakes_made_today,
         }
 
 
@@ -50,6 +69,18 @@ class Subject(Base):
     persistence=Column(String(225))
     date=Column(DateTime)
     review_diary_id=Column(Integer)
+
+    def to_dict(self):
+        return {
+            "id": str(self.id),
+            "core": self.core,
+            "pioneer": self.pioneer,
+            "middleArmy": self.middle_army,
+            "numberOfLimitUp": self.number_of_limit_up,
+            "increase": self.increase,
+            "genreTrends": self.genre_trends,
+            "persistence": self.persistence,
+        }
 
 
 

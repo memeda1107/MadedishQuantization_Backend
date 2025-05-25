@@ -106,6 +106,51 @@ def get_events():
         return jsonify({"error": str(e)}), 500
 
 
+
+@app.route('/api/get_diary', methods=['GET'])
+@cross_origin()
+def get_diary():
+        try:
+            Session = sessionmaker(bind=engine)
+            # 创建一个实例化的会话对象 session
+            session = Session()
+            id=request.args.get('id')
+            record = session.query(ReviewDiary).get(id)
+            return jsonify([record.to_dict()])
+
+        except Exception as e:
+            print(f"Error: {str(e)}")
+            return jsonify({"error": str(e)}), 500
+
+
+
+
+@app.route('/api/get_subject', methods=['GET'])
+@cross_origin()
+def get_subject():
+    try:
+        Session = sessionmaker(bind=engine)
+        # 创建一个实例化的会话对象 session
+        session = Session()
+        review_diary_id = request.args.get('review_diary_id')
+
+        if review_diary_id is not None:
+            from sqlalchemy import cast, String
+            query = session.query(Subject).filter(
+                cast(Subject.review_diary_id, String) == review_diary_id)
+        else:
+            return jsonify({"error": str('查询id为空')}), 500
+
+
+        results = query.all()
+        return jsonify([result.to_dict() for result in results])
+
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
+
+
 if __name__ == '__main__':
     app.run()
 

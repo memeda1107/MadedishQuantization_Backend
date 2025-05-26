@@ -31,7 +31,7 @@ class ReviewDiary(Base):
     def to_dict(self):
         return {
             "id": str(self.id),
-            "title": "盈利"+str(self.income),
+            "title": "收益"+str(self.income),
             # "title": "盈利" + self.income,
             "start": self.record_date.isoformat() if self.record_date else None,
             "end": self.record_date.isoformat() if self.record_date else None,
@@ -53,6 +53,7 @@ class ReviewDiary(Base):
             "expectedLeaders": self.expected_leaders,
             "todayBestSolution": self.today_best_solution,
             "mistakesMadeToday": self.mistakes_made_today,
+            "recordDate":self.record_date,
         }
 
 
@@ -67,7 +68,7 @@ class Subject(Base):
     increase=Column(Double())
     genre_trends=Column(String(225))
     persistence=Column(String(225))
-    date=Column(DateTime)
+    # date=Column(DateTime)
     review_diary_id=Column(Integer)
 
     def to_dict(self):
@@ -80,6 +81,7 @@ class Subject(Base):
             "increase": self.increase,
             "genreTrends": self.genre_trends,
             "persistence": self.persistence,
+            "reviewDiaryId":self.review_diary_id
         }
 
 

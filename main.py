@@ -64,7 +64,7 @@ def get_Subject_data():
     # 创建一个新的实例，即要插入到数据库中
     new_Subject = Subject(core=data['core'], pioneer=data['pioneer'],middle_army=data['middleArmy'],
                             number_of_limit_up=data['numberOfLimitUp'],increase=data['increase'],genre_trends=data['genreTrends']
-                            ,persistence=data['persistence'],date=data['date'],
+                            ,persistence=data['persistence'],
                             review_diary_id=data['reviewDiaryId'])
     # 将新用户添加到会话中，即将其添加到数据库操作队列中
     session.add(new_Subject)
@@ -148,6 +148,101 @@ def get_subject():
     except Exception as e:
         print(f"Error: {str(e)}")
         return jsonify({"error": str(e)}), 500
+
+
+@app.route('/api/edit_diary', methods=['post'])
+@cross_origin()
+def edit_diary():
+    try:
+        Session = sessionmaker(bind=engine)
+        # 创建一个实例化的会话对象 session
+        session = Session()
+        # id = request.data.get('id')
+        data = request.get_json()
+        id=data['id']
+
+        if id is not None:
+            from sqlalchemy import cast, String
+            diary = session.query(ReviewDiary).filter(
+                cast(ReviewDiary.id, String) == id).first()
+        else:
+            return jsonify({"error": str('查询id为空')}), 500
+
+        diary.income=data['income']
+        diary.market_trend=data['marketTrend']
+        diary.market_increase = data['marketIncrease']
+        diary.turnover = data['turnover']
+        diary.number_of_rising = data['numberOfRising']
+        diary.number_of_falling = data['numberOfFalling']
+        diary.number_of_limit_up = data['NumberOfLimitUp']
+        diary.number_of_limit_down = data['NumberOfLimitDown']
+        diary.explosion_rate = data['explosionRate']
+        diary.yesterday_limit_up = data['yesterdayLimitUp']
+        diary.yesterday_connecting_plate = data['yesterdayConnectingPlate']
+        diary.short_term_funds = data['ShortTermFunds']
+        diary.overall_market_review = data['overallMarketReview']
+        diary.any_differences_sectors = data['anyDifferencesSectors']
+        diary.expected_leaders = data['expectedLeaders']
+        diary.today_best_solution = data['todayBestSolution']
+        diary.mistakes_made_today = data['mistakesMadeToday']
+        # 执行更新操作
+        session.commit()
+
+        # 返回成功响应
+        return jsonify({
+            "message": "更新成功",
+            "data": {
+                "id": diary.id,
+            }
+        }), 200
+
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/edit_subject', methods=['post'])
+@cross_origin()
+def edit_subject():
+        try:
+            Session = sessionmaker(bind=engine)
+            # 创建一个实例化的会话对象 session
+            session = Session()
+            # id = request.data.get('id')
+            data = request.get_json()
+            id = data['id']
+
+            if id is not None:
+                from sqlalchemy import cast, String
+                subject = session.query(Subject).filter(
+                    cast(Subject.id, String) == id).first()
+            else:
+                return jsonify({"error": str('查询id为空')}), 500
+
+            subject.core = data['core']
+            subject.pioneer = data['pioneer']
+            subject.middle_army = data['middleArmy']
+            subject.number_of_limit_up = data['numberOfLimitUp']
+            subject.increase = data['increase']
+            subject.genre_trends = data['genreTrends']
+            subject.persistence = data['persistence']
+            subject.pioneer = data['pioneer']
+            subject.review_diary_id = data['reviewDiaryId']
+
+            # 执行更新操作
+            session.commit()
+
+            # 返回成功响应
+            return jsonify({
+                "message": "更新成功",
+                "data": {
+                    "id": subject.id,
+                }
+            }), 200
+
+        except Exception as e:
+            print(f"Error: {str(e)}")
+            return jsonify({"error": str(e)}), 500
+
 
 
 

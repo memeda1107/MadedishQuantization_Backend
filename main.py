@@ -244,6 +244,34 @@ def edit_subject():
             return jsonify({"error": str(e)}), 500
 
 
+@app.route('/api/delete_subject', methods=['delete'])
+@cross_origin()
+def delete_subject():
+    id = request.json.get('id')
+    if not id:
+        return jsonify({"error": "缺少ID参数"}), 400
+
+    try:
+        Session = sessionmaker(bind=engine)
+        session = Session()
+        subject = session.query(Subject).get(id)
+        if not subject:
+            return jsonify({"error": f"ID {id} 不存在"}), 404
+        session.delete(subject)
+        session.commit()
+
+        # 返回成功响应
+        return jsonify({
+            "message": "已删除",
+            "data": {
+                "id": subject.id,
+            }
+        }), 200
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
+
 
 
 if __name__ == '__main__':

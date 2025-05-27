@@ -29,9 +29,9 @@ from model import ReviewDiary
 # 导入创建会话的模块
 from sqlalchemy.orm import sessionmaker
 
-@app.route('/api/addDiary', methods=['post'])
+@app.route('/addDiary', methods=['post'])
 @cross_origin()
-def get_data():
+def add_diary():
     data = request.get_json()  # 获取JSON格式的数据，也可以通过request.form获取表单数据。确保前端Content-Type设置正确。
     # 使用 sessionmaker 创建一个会话类 Session，并绑定到数据库引擎（bind=engine）
     Session = sessionmaker(bind=engine)
@@ -40,8 +40,8 @@ def get_data():
     # 创建一个新的实例，即要插入到数据库中
     new_diary = ReviewDiary(income=data['income'], market_trend=data['marketTrend'],market_increase=data['marketIncrease'],
                             turnover=data['turnover'],number_of_rising=data['numberOfRising'],number_of_falling=data['numberOfFalling']
-                            ,number_of_limit_up=data['NumberOfLimitUp'],number_of_limit_down=data['NumberOfLimitDown'],explosion_rate=data['explosionRate'],
-                            yesterday_limit_up=data['yesterdayLimitUp'],yesterday_connecting_plate=data['yesterdayConnectingPlate'],short_term_funds=data['ShortTermFunds'],
+                            ,number_of_limit_up=data['numberOfLimitUp'],number_of_limit_down=data['numberOfLimitDown'],explosion_rate=data['explosionRate'],
+                            yesterday_limit_up=data['yesterdayLimitUp'],yesterday_connecting_plate=data['yesterdayConnectingPlate'],short_term_funds=data['shortTermFunds'],
                             overall_market_review=data['overallMarketReview'],any_differences_sectors=data['anyDifferencesSectors'],expected_leaders=data['expectedLeaders'],record_date=data['recordDate'],
                             today_best_solution=data['todayBestSolution'],mistakes_made_today=data['mistakesMadeToday'])
     # 将新用户添加到会话中，即将其添加到数据库操作队列中
@@ -53,7 +53,7 @@ def get_data():
 
 
 from model import Subject
-@app.route('/api/addSubject', methods=['post'])
+@app.route('/addSubject', methods=['post'])
 @cross_origin()
 def get_Subject_data():
     data = request.get_json()  # 获取JSON格式的数据，也可以通过request.form获取表单数据。确保前端Content-Type设置正确。
@@ -74,7 +74,7 @@ def get_Subject_data():
 
 
 from datetime import datetime
-@app.route('/api/get_events', methods=['GET'])
+@app.route('/get_events', methods=['GET'])
 @cross_origin()
 def get_events():
     try:
@@ -107,7 +107,7 @@ def get_events():
 
 
 
-@app.route('/api/get_diary', methods=['GET'])
+@app.route('/get_diary', methods=['GET'])
 @cross_origin()
 def get_diary():
         try:
@@ -125,7 +125,7 @@ def get_diary():
 
 
 
-@app.route('/api/get_subject', methods=['GET'])
+@app.route('/get_subject', methods=['GET'])
 @cross_origin()
 def get_subject():
     try:
@@ -150,7 +150,7 @@ def get_subject():
         return jsonify({"error": str(e)}), 500
 
 
-@app.route('/api/edit_diary', methods=['post'])
+@app.route('/edit_diary', methods=['post'])
 @cross_origin()
 def edit_diary():
     try:
@@ -200,7 +200,7 @@ def edit_diary():
         print(f"Error: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
-@app.route('/api/edit_subject', methods=['post'])
+@app.route('/edit_subject', methods=['post'])
 @cross_origin()
 def edit_subject():
         try:
@@ -245,7 +245,7 @@ def edit_subject():
             return jsonify({"error": str(e)}), 500
 
 
-@app.route('/api/delete_subject', methods=['delete'])
+@app.route('/delete_subject', methods=['delete'])
 @cross_origin()
 def delete_subject():
     id = request.json.get('id')
@@ -273,7 +273,7 @@ def delete_subject():
         return jsonify({"error": str(e)}), 500
 
 from model import OperatePlan
-@app.route('/api/getStockPlan', methods=['GET'])
+@app.route('/getStockPlan', methods=['GET'])
 @cross_origin()
 def get_stock_plan():
     try:
@@ -294,7 +294,7 @@ def get_stock_plan():
         print(f"Error: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
-@app.route('/api/addStockPlan', methods=['post'])
+@app.route('/addStockPlan', methods=['post'])
 @cross_origin()
 def add_stock_plan():
     data = request.get_json()  # 获取JSON格式的数据，也可以通过request.form获取表单数据。确保前端Content-Type设置正确。
@@ -312,7 +312,7 @@ def add_stock_plan():
     return jsonify({'message': '新增成功！id: {}'.format(new_operatePlan.id)}), 201
 
 
-@app.route('/api/editStockPlan', methods=['post'])
+@app.route('/editStockPlan', methods=['post'])
 @cross_origin()
 def edit_stock_plan():
         try:
@@ -352,7 +352,7 @@ def edit_stock_plan():
             print(f"Error: {str(e)}")
             return jsonify({"error": str(e)}), 500
 
-@app.route('/api/deleteStockPlan', methods=['delete'])
+@app.route('/deleteStockPlan', methods=['delete'])
 @cross_origin()
 def delete_stock_plan():
     id = request.json.get('id')

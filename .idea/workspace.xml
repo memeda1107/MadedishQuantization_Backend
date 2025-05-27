@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="79fbebe3-2e26-444e-a31d-5bc3d96ae240" name="Changes" comment="题材表新增删除接口">
+    <list default="true" id="79fbebe3-2e26-444e-a31d-5bc3d96ae240" name="Changes" comment="新增买卖方案的增删改查">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -195,7 +194,15 @@
       <option name="project" value="LOCAL" />
       <updated>1748263858944</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="新增买卖方案的增删改查">
+      <option name="closed" value="true" />
+      <created>1748330757224</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1748330757225</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -218,7 +225,8 @@
     <MESSAGE value="查看数据的功能" />
     <MESSAGE value="题材表新增修改保存接口" />
     <MESSAGE value="题材表新增删除接口" />
-    <option name="LAST_COMMIT_MESSAGE" value="题材表新增删除接口" />
+    <MESSAGE value="新增买卖方案的增删改查" />
+    <option name="LAST_COMMIT_MESSAGE" value="新增买卖方案的增删改查" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/MadedishQuantization_Backend$main.coverage" NAME="main Coverage Results" MODIFIED="1746692780220" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />

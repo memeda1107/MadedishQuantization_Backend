@@ -65,7 +65,7 @@ def get_Subject_data():
     new_Subject = Subject(core=data['core'], pioneer=data['pioneer'],middle_army=data['middleArmy'],
                             number_of_limit_up=data['numberOfLimitUp'],increase=data['increase'],genre_trends=data['genreTrends']
                             ,persistence=data['persistence'],
-                            review_diary_id=data['reviewDiaryId'])
+                            review_diary_id=data['reviewDiaryId'],subject_name=data['subjectName'])
     # 将新用户添加到会话中，即将其添加到数据库操作队列中
     session.add(new_Subject)
     # 提交会话，将所有在此会话中的数据库操作提交到数据库
@@ -174,12 +174,12 @@ def edit_diary():
         diary.turnover = data['turnover']
         diary.number_of_rising = data['numberOfRising']
         diary.number_of_falling = data['numberOfFalling']
-        diary.number_of_limit_up = data['NumberOfLimitUp']
-        diary.number_of_limit_down = data['NumberOfLimitDown']
+        diary.number_of_limit_up = data['numberOfLimitUp']
+        diary.number_of_limit_down = data['numberOfLimitDown']
         diary.explosion_rate = data['explosionRate']
         diary.yesterday_limit_up = data['yesterdayLimitUp']
         diary.yesterday_connecting_plate = data['yesterdayConnectingPlate']
-        diary.short_term_funds = data['ShortTermFunds']
+        diary.short_term_funds = data['shortTermFunds']
         diary.overall_market_review = data['overallMarketReview']
         diary.any_differences_sectors = data['anyDifferencesSectors']
         diary.expected_leaders = data['expectedLeaders']
@@ -227,6 +227,7 @@ def edit_subject():
             subject.persistence = data['persistence']
             subject.pioneer = data['pioneer']
             subject.review_diary_id = data['reviewDiaryId']
+            subject.subject_name=data['subjectName']
 
             # 执行更新操作
             session.commit()
@@ -271,6 +272,112 @@ def delete_subject():
         print(f"Error: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
+from model import OperatePlan
+@app.route('/api/getStockPlan', methods=['GET'])
+@cross_origin()
+def get_stock_plan():
+    try:
+        Session = sessionmaker(bind=engine)
+        # 创建一个实例化的会话对象 session
+        session = Session()
+        review_diary_id = request.args.get('review_diary_id')
+
+        if review_diary_id is not None:
+            from sqlalchemy import cast, String
+            query = session.query(OperatePlan).filter(
+                cast(OperatePlan.review_diary_id, String) == review_diary_id)
+        else:
+            return jsonify({"error": str('查询id为空')}), 500
+        results = query.all()
+        return jsonify([result.to_dict() for result in results])
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/addStockPlan', methods=['post'])
+@cross_origin()
+def add_stock_plan():
+    data = request.get_json()  # 获取JSON格式的数据，也可以通过request.form获取表单数据。确保前端Content-Type设置正确。
+    # 使用 sessionmaker 创建一个会话类 Session，并绑定到数据库引擎（bind=engine）
+    Session = sessionmaker(bind=engine)
+    # 创建一个实例化的会话对象 session
+    session = Session()
+    # 创建一个新的实例，即要插入到数据库中
+    new_operatePlan = OperatePlan(stock_name=data['stockName'], expect_open=data['expectOpen'],operate_plan=data['operatePlan'],
+                            operate=data['operate'],review_diary_id=data['reviewDiaryId'],subject_name=data['subjectName'])
+    # 将新用户添加到会话中，即将其添加到数据库操作队列中
+    session.add(new_operatePlan)
+    # 提交会话，将所有在此会话中的数据库操作提交到数据库
+    session.commit()
+    return jsonify({'message': '新增成功！id: {}'.format(new_operatePlan.id)}), 201
+
+
+@app.route('/api/editStockPlan', methods=['post'])
+@cross_origin()
+def edit_stock_plan():
+        try:
+            Session = sessionmaker(bind=engine)
+            # 创建一个实例化的会话对象 session
+            session = Session()
+            # id = request.data.get('id')
+            data = request.get_json()
+            id = data['id']
+
+            if id is not None:
+                from sqlalchemy import cast, String
+                operatePlan = session.query(OperatePlan).filter(
+                    cast(OperatePlan.id, String) == id).first()
+            else:
+                return jsonify({"error": str('查询id为空')}), 500
+
+            operatePlan.stock_name = data['stockName']
+            operatePlan.expect_open = data['expectOpen']
+            operatePlan.operate_plan = data['operatePlan']
+            operatePlan.operate = data['operate']
+            operatePlan.review_diary_id = data['reviewDiaryId']
+            operatePlan.subject_name=data['subjectName']
+
+            # 执行更新操作
+            session.commit()
+
+            # 返回成功响应
+            return jsonify({
+                "message": "更新成功",
+                "data": {
+                    "id": operatePlan.id,
+                }
+            }), 200
+
+        except Exception as e:
+            print(f"Error: {str(e)}")
+            return jsonify({"error": str(e)}), 500
+
+@app.route('/api/deleteStockPlan', methods=['delete'])
+@cross_origin()
+def delete_stock_plan():
+    id = request.json.get('id')
+    if not id:
+        return jsonify({"error": "缺少ID参数"}), 400
+
+    try:
+        Session = sessionmaker(bind=engine)
+        session = Session()
+        operatePlan = session.query(OperatePlan).get(id)
+        if not operatePlan:
+            return jsonify({"error": f"ID {id} 不存在"}), 404
+        session.delete(operatePlan)
+        session.commit()
+
+        # 返回成功响应
+        return jsonify({
+            "message": "已删除",
+            "data": {
+                "id": operatePlan.id,
+            }
+        }), 200
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return jsonify({"error": str(e)}), 500
 
 
 

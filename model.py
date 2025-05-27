@@ -31,7 +31,7 @@ class ReviewDiary(Base):
     def to_dict(self):
         return {
             "id": str(self.id),
-            "title": "收益"+str(self.income),
+            "title": "收益："+str(self.income),
             # "title": "盈利" + self.income,
             "start": self.record_date.isoformat() if self.record_date else None,
             "end": self.record_date.isoformat() if self.record_date else None,
@@ -70,6 +70,7 @@ class Subject(Base):
     persistence=Column(String(225))
     # date=Column(DateTime)
     review_diary_id=Column(Integer)
+    subject_name=Column(String(225))
 
     def to_dict(self):
         return {
@@ -81,8 +82,32 @@ class Subject(Base):
             "increase": self.increase,
             "genreTrends": self.genre_trends,
             "persistence": self.persistence,
-            "reviewDiaryId":self.review_diary_id
+            "reviewDiaryId":self.review_diary_id,
+            "subjectName":self.subject_name
         }
 
+class OperatePlan(Base):
+    # 定义表名
+    __tablename__ = 'operate_plan'
+    id = Column(Integer, Sequence('user_id_seq'), primary_key=True)
+    subject_name=Column(String(225))
+    stock_name=Column(String(225))
+    stock_code = Column(String(225))
+    expect_open=Column(String(225))
+    operate_plan=Column(String(225))
+    # date=Column(DateTime)
+    review_diary_id=Column(Integer)
+    operate=Column(String(225))
 
+    def to_dict(self):
+        return {
+            "id": str(self.id),
+            "subjectName": self.subject_name,
+            "stockName": self.stock_name,
+            "stockCode": self.stock_code,
+            "expectOpen": self.expect_open,
+            "operatePlan": self.operate_plan,
+            "reviewDiaryId":self.review_diary_id,
+            "operate":self.operate
+        }
 

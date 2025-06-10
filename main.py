@@ -48,7 +48,8 @@ def add_diary():
     session.add(new_diary)
     # 提交会话，将所有在此会话中的数据库操作提交到数据库
     session.commit()
-    return jsonify({'message': '新增成功！','id': format(new_diary.id)}), 201
+    # return jsonify({'message': '新增成功！','id': format(new_diary.id)}), 201
+    return jsonify(new_diary.to_dict()), 201
 
 
 
@@ -70,7 +71,7 @@ def get_Subject_data():
     session.add(new_Subject)
     # 提交会话，将所有在此会话中的数据库操作提交到数据库
     session.commit()
-    return jsonify({'message': '新增成功！id: {}'.format(new_Subject.id)}), 201
+    return jsonify(new_Subject.to_dict()), 201
 
 
 from datetime import datetime
@@ -309,7 +310,7 @@ def add_stock_plan():
     session.add(new_operatePlan)
     # 提交会话，将所有在此会话中的数据库操作提交到数据库
     session.commit()
-    return jsonify({'message': '新增成功！id: {}'.format(new_operatePlan.id)}), 201
+    return jsonify(new_operatePlan.to_dict()), 201
 
 
 @app.route('/editStockPlan', methods=['post'])

@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Sequence,Float,TEXT,Double,DateTime,Date
 from sqlalchemy.ext.declarative import declarative_base
-
+from datetime import datetime
 # 创建一个基类，用于定义数据模型的基本结构
 Base = declarative_base()
 
@@ -27,6 +27,7 @@ class ReviewDiary(Base):
     today_best_solution=Column(TEXT)
     mistakes_made_today=Column(TEXT)
     record_date = Column(DateTime)
+    user_id = Column(Integer)
 
     def to_dict(self):
         return {
@@ -54,6 +55,8 @@ class ReviewDiary(Base):
             "todayBestSolution": self.today_best_solution,
             "mistakesMadeToday": self.mistakes_made_today,
             "recordDate":self.record_date,
+            # "recordDate":datetime.strptime(self.record_date, "%Y-%m-%d"),
+            "userId":self.user_id
         }
 
 
@@ -109,5 +112,20 @@ class OperatePlan(Base):
             "operatePlan": self.operate_plan,
             "reviewDiaryId":self.review_diary_id,
             "operate":self.operate
+        }
+
+
+class User(Base):
+        # 定义表名
+    __tablename__ = 'user'
+    id = Column(Integer, Sequence('user_id_seq'), primary_key=True)
+    user_name = Column(String(225))
+    password = Column(String(225))
+
+    def to_dict(self):
+        return {
+                "id": str(self.id),
+                "userName": self.user_name,
+                "password": self.password,
         }
 

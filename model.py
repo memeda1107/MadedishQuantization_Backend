@@ -121,6 +121,7 @@ class User(Base):
     id = Column(Integer, Sequence('user_id_seq'), primary_key=True)
     user_name = Column(String(225))
     password = Column(String(225))
+    salt=Column(String(225))
 
     def to_dict(self):
         return {

@@ -107,7 +107,7 @@ def get_diary():
             Session = sessionmaker(bind=engine)
             session = Session()
             diary_id=request.args.get('id')
-            record = session.query(ReviewDiary).get(diary_id).first()
+            record = session.query(ReviewDiary).get(diary_id)
             diary=record.to_dict()
             session.close()
             return jsonify(diary)
@@ -370,13 +370,25 @@ def delete_stock_plan():
 from model import User
 
 #注册用户
+import bcrypt
 @app.route('/addUser', methods=['post'])
 @cross_origin()
 def add_user():
     data = request.get_json()
     Session = sessionmaker(bind=engine)
     session = Session()
-    new_user = User(user_name=data['userName'], password=data['password'])
+    #检验是否已存在该用户名
+    user = session.query(User).filter(
+        data.get('userName') == User.user_name).all()
+    if user:
+        session.close()
+        return jsonify({"message": "已存在该用户名！"}), 401
+
+    frontend_hashed_pwd = data['password'].encode('utf-8')
+    # 二次哈希（加盐）
+    salt=bcrypt.gensalt(10)
+    backend_hashed_pwd = bcrypt.hashpw(frontend_hashed_pwd,salt)
+    new_user = User(user_name=data['userName'], password=backend_hashed_pwd,salt=salt)
     session.add(new_user)
     session.commit()
     user=new_user.to_dict()
@@ -388,21 +400,28 @@ def add_user():
 @cross_origin()
 def login():
     data = request.get_json()
+    frontend_hashed_pwd = data['password'].encode('utf-8')  # 前端已加密的密码
     Session = sessionmaker(bind=engine)
     session = Session()
-    user = session.query(User).filter(and_(
-        User.user_name == data.get('userName'),
-        User.password == data.get('password'))).first()
-
-    # 验证密码
+    user = session.query(User).filter(
+        User.user_name == data.get('userName')).first()
     if not user:
         session.close()
-        return jsonify({"message": "密码错误"}), 401
+        return jsonify({"message": "用户不存在！"}), 401
 
+    backend_hashed_pwd=user.password.encode('utf-8')
+    # 验证哈希格式
+    if not backend_hashed_pwd.startswith((b"$2a$", b"$2b$")):
+        return "无效的哈希格式", 500
+    # 验证密码
+    backend_hashed_pwd = bcrypt.hashpw(frontend_hashed_pwd, user.salt.encode('utf-8'))
+    checkPassword=bcrypt.checkpw(frontend_hashed_pwd, backend_hashed_pwd)
+    if not checkPassword:
+        session.close()
+        return jsonify({"message": "密码错误"}), 401
     from jwt_token import generate_jwt_token
     token = generate_jwt_token(user.id)
     loginUser=user.to_dict()
-
     return jsonify({
         "message": "登录成功",
         "token": token,
